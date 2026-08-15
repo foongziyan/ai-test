@@ -230,3 +230,31 @@ with tab3:
         ax.annotate(f"{p.get_height():.2f}%", (p.get_x() + p.get_width() / 2., p.get_height()),
                     ha='center', va='center', xytext=(0, 5), textcoords='offset points')
     st.pyplot(fig)
+
+# 1. Define plan prices
+NETFLIX_PLANS = {
+    "Basic": 9.99,
+    "Standard": 15.49,
+    "Premium": 19.99,
+}
+
+st.title("Customer Details")
+
+# 2. Customer inputs
+customer_name = st.text_input("Customer Name")
+email = st.text_input("Email Address")
+
+# 3. Netflix Subscription dropdown
+selected_plan = st.selectbox(
+    "Netflix Subscription:", list(NETFLIX_PLANS.keys()), index=1
+)
+
+# 4. Automatically set fee based on plan
+monthly_fee = NETFLIX_PLANS[selected_plan]
+
+# 5. Display fee as read-only / disabled input
+st.number_input(
+    "Monthly Fee ($):",
+    value=monthly_fee,
+    disabled=True,  # Disables user editing
+)
