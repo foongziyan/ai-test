@@ -109,6 +109,13 @@ with st.spinner("Initializing system & loading ML pipeline..."):
 if 'has_predicted' not in st.session_state:
     st.session_state.has_predicted = False
 
+# Subscription price mapping dictionary
+NETFLIX_PLANS = {
+    "Basic": 9.99,
+    "Standard": 15.49,
+    "Premium": 19.99
+}
+
 # ---------------------------------------------------------
 # THREE HOMEPAGE TABS
 # ---------------------------------------------------------
@@ -128,9 +135,11 @@ with tab1:
     with col2:
         gender = st.selectbox("Gender", ["Male", "Female", "Other"])
     with col3:
-        subscription_type = st.selectbox("Subscription Type", ["Basic", "Standard", "Premium"])
+        subscription_type = st.selectbox("Subscription Type", list(NETFLIX_PLANS.keys()), index=0)
     with col4:
-        monthly_fee = st.number_input("Monthly Fee ($)", min_value=5.0, max_value=30.0, value=13.99)
+        # Auto-populates based on selected subscription_type and disables manual typing
+        monthly_fee = NETFLIX_PLANS[subscription_type]
+        st.number_input("Monthly Fee ($)", value=monthly_fee, disabled=True)
 
     col5, col6, col7, col8 = st.columns(4)
     with col5:
@@ -230,31 +239,3 @@ with tab3:
         ax.annotate(f"{p.get_height():.2f}%", (p.get_x() + p.get_width() / 2., p.get_height()),
                     ha='center', va='center', xytext=(0, 5), textcoords='offset points')
     st.pyplot(fig)
-
-# 1. Define plan prices
-NETFLIX_PLANS = {
-    "Basic": 9.99,
-    "Standard": 15.49,
-    "Premium": 19.99,
-}
-
-st.title("Customer Details")
-
-# 2. Customer inputs
-customer_name = st.text_input("Customer Name")
-email = st.text_input("Email Address")
-
-# 3. Netflix Subscription dropdown
-selected_plan = st.selectbox(
-    "Netflix Subscription:", list(NETFLIX_PLANS.keys()), index=1
-)
-
-# 4. Automatically set fee based on plan
-monthly_fee = NETFLIX_PLANS[selected_plan]
-
-# 5. Display fee as read-only / disabled input
-st.number_input(
-    "Monthly Fee ($):",
-    value=monthly_fee,
-    disabled=True,  # Disables user editing
-)
